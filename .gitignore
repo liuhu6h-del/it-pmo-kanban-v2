@@ -13,6 +13,7 @@ Thumbs.db
 
 # Tooling
 node_modules/
+.playwright-mcp/
 
 # Local Claude Code settings
 .claude/settings.local.json

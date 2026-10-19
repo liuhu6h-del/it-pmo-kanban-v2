@@ -5,30 +5,37 @@
 ![JavaScript](https://img.shields.io/badge/JavaScript-vanilla-F7DF1E?logo=javascript&logoColor=black)
 ![Zero build](https://img.shields.io/badge/build-zero-brightgreen)
 ![No dependencies](https://img.shields.io/badge/dependencies-none-brightgreen)
-[![CI](https://github.com/liuhu6h-del/it-pmo-kanban/actions/workflows/ci.yml/badge.svg)](https://github.com/liuhu6h-del/it-pmo-kanban/actions/workflows/ci.yml)
-[![Live demo](https://img.shields.io/badge/demo-GitHub%20Pages-222?logo=github)](https://liuhu6h-del.github.io/it-pmo-kanban/)
+[![CI](https://github.com/liuhu6h-del/it-pmo-kanban-v2/actions/workflows/ci.yml/badge.svg)](https://github.com/liuhu6h-del/it-pmo-kanban-v2/actions/workflows/ci.yml)
+[![Live demo](https://img.shields.io/badge/demo-GitHub%20Pages-222?logo=github)](https://liuhu6h-del.github.io/it-pmo-kanban-v2/)
 
 An IT PMO Kanban board, built as a demo and training tool for a fictitious bank. The whole app is one self-contained `index.html` file, with its markup, styles and script inline. There are no frameworks, no dependencies and no build step. It runs straight from the file system or from GitHub Pages.
 
-**Live demo:** https://liuhu6h-del.github.io/it-pmo-kanban/
+**v2** has a new warm, Claude-inspired look, a light/dark toggle and visual progress tracking. The original version is still live at [it-pmo-kanban](https://liuhu6h-del.github.io/it-pmo-kanban/).
+
+**Live demo:** https://liuhu6h-del.github.io/it-pmo-kanban-v2/
+
+![IT PMO Kanban board with Backlog, In Progress, Blocked and Done columns](docs/screenshot.png)
 
 ## Features
 
+- **Progress panel:** overall completion %, a status-mix bar with counts, and a completion bar for each project. The bars animate as tasks move.
+- **Stage stepper** on every card, showing how far it is along Backlog → In Progress → Done (Blocked shows in red).
+- **Light and dark themes:** the page starts in the operating system's mode, and a button at the top right switches between them. Warm cream and terracotta in light mode, warm charcoal in dark mode.
 - **Four columns:** Backlog, In Progress, Blocked and Done, each with a task count.
 - **Drag and drop** cards between columns.
 - **Move menu** on every card, so a card can be moved with the keyboard or without drag and drop.
 - **Filters** by project or workstream, assignee and priority, plus a "Clear filters" button.
 - **Add Task** dialog with inline validation. Each task gets a `UOB-ITPM-####` ID.
 - **Inline delete** that asks "Delete? Yes / No" on the card itself.
-- **Overdue tasks** get a badge, and the header summary counts them. Seed due dates are set relative to today, so the demo always has some overdue work.
+- **Overdue tasks** get a badge, and the progress panel counts them. Seed due dates are set relative to today, so the demo always has some overdue work.
 - **Email notification** through [FormSubmit](https://formsubmit.co) when a task is added. The card appears at once, and a warning toast shows if the email fails.
 - Accessible markup: labelled controls, live regions for status messages, and keyboard focus restored after each update.
 
 ## How to install
 
 ```sh
-git clone https://github.com/liuhu6h-del/it-pmo-kanban.git
-cd it-pmo-kanban
+git clone https://github.com/liuhu6h-del/it-pmo-kanban-v2.git
+cd it-pmo-kanban-v2
 ```
 
 No npm install or build step is needed.
@@ -36,9 +43,9 @@ No npm install or build step is needed.
 ## How to run
 
 - Open `index.html` in a browser: `open index.html` on macOS, or double-click it on Windows.
-- Or use the [live demo](https://liuhu6h-del.github.io/it-pmo-kanban/).
+- Or use the [live demo](https://liuhu6h-del.github.io/it-pmo-kanban-v2/).
 
-Nothing is stored. Refreshing the page resets the board to the sample tasks, on purpose.
+Nothing is stored. Refreshing the page resets the board to the sample tasks and the theme to the system setting, on purpose.
 
 ## Configuration
 
@@ -66,7 +73,7 @@ const FORMSUBMIT_ENDPOINT = "https://formsubmit.co/ajax/YOUR_EMAIL@example.com";
 
 - Vanilla HTML, CSS and JS only. No frameworks, npm, bundler or build step.
 - Works from `file://` with no server.
-- No external resources: no CDN scripts, web fonts or images. It uses the system font stack and Unicode or inline SVG icons.
+- No external resources: no CDN scripts, web fonts or images. It uses system font stacks and inline SVG icons.
 - No persistence of any kind: no localStorage, sessionStorage, IndexedDB or cookies.
 - One network call only, to the FormSubmit endpoint.
 - No native `alert()` or `confirm()` dialogs, and no `!important`.

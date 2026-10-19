@@ -6,38 +6,50 @@
   <title>IT PMO Kanban</title>
   <style>
     /* =========================================================
-       Design tokens: palette, spacing scale, type
+       Design tokens: warm "Claude-like" palette, light + dark
        ========================================================= */
     :root {
-      --blue-900: #0b2545;
-      --blue-800: #12355b;
-      --blue-700: #1d4f91;
-      --blue-600: #2563b0;
-      --blue-500: #3b7dd8;
-      --blue-100: #e6effa;
-      --blue-50:  #f3f7fc;
+      color-scheme: light;
 
-      --grey-900: #1c2430;
-      --grey-700: #46505e;
-      --grey-500: #7a8494;
-      --grey-300: #c9d0da;
-      --grey-200: #e2e6ec;
-      --grey-100: #f1f3f6;
-      --white:    #ffffff;
+      --bg:            #f5f4ee;
+      --surface:       #ffffff;
+      --surface-2:     #faf9f5;
+      --sunken:        #edebe3;
+      --border:        #e3e0d6;
+      --border-strong: #cfcbbf;
+      --text:          #1f1e1d;
+      --text-muted:    #6b6a63;
+      --track:         #e8e5dc;
 
-      --prio-critical: #c62828;
-      --prio-high:     #d98200;
-      --prio-medium:   #2563b0;
-      --prio-low:      #7a8494;
+      --accent:        #c15f3c;
+      --accent-hover:  #a94f30;
+      --accent-fill:   #c15f3c;
+      --accent-soft:   #f6e6dd;
+      --accent-fg:     #9a4529;
+      --on-accent:     #ffffff;
 
-      --danger-bg:  #fdecec;
-      --danger-fg:  #a61b1b;
-      --success-bg: #e8f5ec;
-      --success-fg: #1e6b38;
-      --warning-bg: #fff4e0;
-      --warning-fg: #8a5300;
+      --status-backlog:  #8a877d;
+      --status-progress: #c15f3c;
+      --status-blocked:  #b3412f;
+      --status-done:     #5e7f4f;
 
-      --focus-ring: #f2b705;
+      --prio-critical: #b3412f;
+      --prio-high:     #c98a2b;
+      --prio-medium:   #c15f3c;
+      --prio-low:      #8a877d;
+      --on-prio:       #ffffff;
+      --on-prio-high:  #1f1e1d;
+
+      --danger-bg:      #fbeae6;
+      --danger-fg:      #9e3626;
+      --danger-border:  #f0c4ba;
+      --success-bg:     #eaf0e4;
+      --success-fg:     #3f5e31;
+      --warning-bg:     #fbf0dc;
+      --warning-fg:     #7a5410;
+
+      --focus-ring: #c15f3c;
+      --backdrop:   rgba(31, 30, 29, 0.5);
 
       --space-1: 4px;
       --space-2: 8px;
@@ -46,15 +58,68 @@
       --space-5: 24px;
       --space-6: 32px;
 
-      --radius-sm: 4px;
-      --radius-md: 8px;
-      --radius-lg: 12px;
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 14px;
 
-      --shadow-card: 0 1px 2px rgba(11, 37, 69, 0.08), 0 1px 3px rgba(11, 37, 69, 0.06);
-      --shadow-pop:  0 10px 30px rgba(11, 37, 69, 0.25);
+      --shadow-card:  0 1px 2px rgba(31, 30, 29, 0.05);
+      --shadow-hover: 0 6px 16px rgba(31, 30, 29, 0.08);
+      --shadow-pop:   0 18px 48px rgba(31, 30, 29, 0.18);
+
+      --dur-fast: 150ms;
+      --dur-slow: 450ms;
+      --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
 
       --font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --font-serif: "Tiempos Text", "Iowan Old Style", Charter, Georgia, "Times New Roman", serif;
       --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+
+    /* Dark theme: init() sets data-theme from the OS preference; the header toggle flips it. */
+    :root[data-theme="dark"] {
+        color-scheme: dark;
+
+        --bg:            #262624;
+        --surface:       #30302e;
+        --surface-2:     #2b2b29;
+        --sunken:        #1f1e1d;
+        --border:        #3e3d39;
+        --border-strong: #55534d;
+        --text:          #ecebe6;
+        --text-muted:    #a6a39a;
+        --track:         #3a3935;
+
+        --accent:        #d97757;
+        --accent-hover:  #e08a6d;
+        --accent-fill:   #c15f3c;
+        --accent-soft:   #3a2a23;
+        --accent-fg:     #f0a88e;
+
+        --status-backlog:  #9c998f;
+        --status-progress: #d97757;
+        --status-blocked:  #c2453a;
+        --status-done:     #8baa78;
+
+        --prio-low: #6f6c64;
+
+        --danger-bg:     #3d2420;
+        --danger-fg:     #f2a493;
+        --danger-border: #5c342c;
+        --success-bg:    #26301f;
+        --success-fg:    #a9c795;
+        --warning-bg:    #3a2f1c;
+        --warning-fg:    #e6c07a;
+
+        --focus-ring: #d97757;
+        --backdrop:   rgba(0, 0, 0, 0.6);
+
+        --shadow-card:  0 1px 2px rgba(0, 0, 0, 0.3);
+        --shadow-hover: 0 6px 16px rgba(0, 0, 0, 0.35);
+        --shadow-pop:   0 18px 48px rgba(0, 0, 0, 0.5);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      :root { --dur-fast: 0ms; --dur-slow: 0ms; }
     }
 
     /* =========================================================
@@ -66,9 +131,10 @@
       margin: 0;
       font-family: var(--font);
       font-size: 15px;
-      line-height: 1.45;
-      color: var(--grey-900);
-      background: var(--grey-100);
+      line-height: 1.5;
+      color: var(--text);
+      background: var(--bg);
+      -webkit-font-smoothing: antialiased;
     }
 
     h1, h2, h3, p { margin: 0; }
@@ -76,9 +142,11 @@
     button, input, select, textarea { font: inherit; color: inherit; }
 
     :focus-visible {
-      outline: 3px solid var(--focus-ring);
+      outline: 2px solid var(--focus-ring);
       outline-offset: 2px;
     }
+
+    .icon { width: 1em; height: 1em; flex: none; vertical-align: -0.125em; }
 
     .visually-hidden {
       position: absolute;
@@ -96,77 +164,186 @@
     .btn {
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: var(--space-2);
+      min-height: 40px;
       padding: var(--space-2) var(--space-4);
       border: 1px solid transparent;
       border-radius: var(--radius-md);
       font-weight: 600;
       cursor: pointer;
-      background: var(--white);
-      color: var(--blue-800);
+      background: var(--surface);
+      color: var(--text);
+      transition: background-color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
     }
-    .btn-primary { background: var(--blue-600); color: var(--white); }
-    .btn-primary:hover { background: var(--blue-700); }
-    .btn-primary:disabled { background: var(--grey-500); cursor: progress; }
-    .btn-light { background: var(--white); color: var(--blue-800); }
-    .btn-light:hover { background: var(--blue-100); }
-    .btn-ghost { background: transparent; border-color: var(--grey-300); color: var(--grey-700); }
-    .btn-ghost:hover { background: var(--grey-100); }
+    .btn-primary { background: var(--accent-fill); color: var(--on-accent); }
+    .btn-primary:hover { background: var(--accent-hover); }
+    .btn-primary:disabled { background: var(--status-backlog); cursor: progress; }
+    .btn-ghost { background: transparent; border-color: var(--border-strong); color: var(--text-muted); }
+    .btn-ghost:hover { background: var(--sunken); color: var(--text); }
+    .btn-icon { width: 40px; padding: 0; }
+    .btn-icon .icon { width: 18px; height: 18px; }
+
+    .header-actions { display: flex; align-items: center; gap: var(--space-2); }
 
     /* =========================================================
-       Header: wordmark, summary strip, add button
+       Header: wordmark and Add Task button
        ========================================================= */
     .app-header {
-      background: linear-gradient(90deg, var(--blue-900), var(--blue-700));
-      color: var(--white);
-      padding: var(--space-4) var(--space-5);
       display: flex;
       flex-wrap: wrap;
       align-items: center;
-      gap: var(--space-4) var(--space-5);
+      justify-content: space-between;
+      gap: var(--space-3) var(--space-5);
+      padding: var(--space-4) var(--space-5);
+      border-bottom: 1px solid var(--border);
     }
 
     .wordmark {
       display: flex;
-      align-items: baseline;
+      align-items: center;
       gap: var(--space-2);
-      font-size: 1.35rem;
-      font-weight: 800;
-      letter-spacing: 0.04em;
+      font-family: var(--font-serif);
+      font-size: 1.5rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
     }
+    .wordmark .icon { width: 26px; height: 26px; color: var(--accent); }
     .wordmark small {
-      font-size: 0.8rem;
+      font-family: var(--font);
+      font-size: 0.85rem;
       font-weight: 500;
       letter-spacing: 0;
-      opacity: 0.8;
+      color: var(--text-muted);
+      margin-left: var(--space-1);
+    }
+
+    .demo-note {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      margin: var(--space-4) var(--space-5) 0;
+      padding: var(--space-2) var(--space-3);
+      border-radius: var(--radius-md);
+      background: var(--accent-soft);
+      color: var(--accent-fg);
+      font-size: 0.85rem;
+    }
+
+    /* =========================================================
+       Progress panel: overall, status mix, per project
+       ========================================================= */
+    .progress-panel {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+      gap: var(--space-4);
+      margin: var(--space-4) var(--space-5) 0;
+    }
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-5);
+      box-shadow: var(--shadow-card);
+      min-width: 0;
+    }
+    .panel-title {
+      font-family: var(--font-serif);
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: var(--space-3);
+    }
+    .panel-subtitle {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      margin: var(--space-5) 0 var(--space-2);
+    }
+
+    .overall { display: flex; align-items: baseline; flex-wrap: wrap; gap: var(--space-2) var(--space-3); margin-bottom: var(--space-3); }
+    .overall-pct {
+      font-family: var(--font-serif);
+      font-size: 2.6rem;
+      font-weight: 600;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+    .overall-caption { color: var(--text-muted); font-size: 0.9rem; }
+
+    .bar {
+      height: 8px;
+      background: var(--track);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .bar-lg { height: 12px; }
+    .bar-fill {
+      display: block;
+      height: 100%;
+      width: 0;
+      background: var(--status-done);
+      border-radius: inherit;
+      transition: width var(--dur-slow) var(--ease);
+    }
+
+    .stack-bar {
+      display: flex;
+      height: 12px;
+      background: var(--track);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .stack-seg { height: 100%; width: 0; transition: width var(--dur-slow) var(--ease); }
+    .stack-seg + .stack-seg { box-shadow: inset 2px 0 0 var(--surface); }
+
+    .seg-backlog, .dot-backlog         { background: var(--status-backlog); }
+    .seg-in-progress, .dot-in-progress { background: var(--status-progress); }
+    .seg-blocked, .dot-blocked         { background: var(--status-blocked); }
+    .seg-done, .dot-done               { background: var(--status-done); }
+
+    .status-dot {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex: none;
     }
 
     .summary {
       display: flex;
       flex-wrap: wrap;
-      gap: var(--space-2);
-      margin: 0;
+      gap: var(--space-2) var(--space-4);
+      margin: var(--space-3) 0 0;
       padding: 0;
       list-style: none;
-      flex: 1 1 auto;
-    }
-    .summary li {
-      background: rgba(255, 255, 255, 0.12);
-      border-radius: var(--radius-md);
-      padding: var(--space-1) var(--space-3);
       font-size: 0.85rem;
-      white-space: nowrap;
+      color: var(--text-muted);
     }
-    .summary strong { font-size: 1rem; margin-left: var(--space-1); }
-    .summary .summary-overdue { background: rgba(198, 40, 40, 0.85); }
+    .summary li { display: inline-flex; align-items: center; gap: var(--space-2); white-space: nowrap; }
+    .summary strong { color: var(--text); font-variant-numeric: tabular-nums; }
+    .summary .summary-overdue {
+      background: var(--danger-bg);
+      color: var(--danger-fg);
+      border: 1px solid var(--danger-border);
+      border-radius: 999px;
+      padding: 0 var(--space-2);
+    }
+    .summary .summary-overdue strong { color: inherit; }
 
-    .demo-note {
-      background: var(--blue-50);
-      border-bottom: 1px solid var(--blue-100);
-      color: var(--blue-800);
+    .project-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-3); }
+    .project-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: var(--space-1) var(--space-3);
       font-size: 0.85rem;
-      padding: var(--space-2) var(--space-5);
     }
+    .project-row[hidden] { display: none; }
+    .project-name { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .project-stat { color: var(--text-muted); font-variant-numeric: tabular-nums; }
+    .project-row .bar { grid-column: 1 / -1; }
+    .project-empty { font-size: 0.85rem; color: var(--text-muted); }
 
     /* =========================================================
        Filter bar
@@ -176,22 +353,31 @@
       flex-wrap: wrap;
       align-items: flex-end;
       gap: var(--space-3) var(--space-4);
-      padding: var(--space-4) var(--space-5);
-      background: var(--white);
-      border-bottom: 1px solid var(--grey-200);
+      padding: var(--space-5) var(--space-5) 0;
     }
-    .filters h2 { width: 100%; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--grey-700); }
+    .filters h2 {
+      width: 100%;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+    }
     .filter-field { display: flex; flex-direction: column; gap: var(--space-1); min-width: 180px; }
-    .filter-field label { font-size: 0.8rem; font-weight: 600; color: var(--grey-700); }
+    .filter-field label { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); }
 
-    .input, .filter-field input, .filter-field select {
+    .filter-field input, .filter-field select, .field input, .field select, .field textarea {
+      min-height: 40px;
       padding: var(--space-2) var(--space-3);
-      border: 1px solid var(--grey-300);
+      border: 1px solid var(--border-strong);
       border-radius: var(--radius-sm);
-      background: var(--white);
-      min-height: 38px;
+      background: var(--surface);
+      transition: border-color var(--dur-fast) var(--ease);
     }
-    .filter-status { font-size: 0.85rem; color: var(--grey-700); margin-left: auto; align-self: center; }
+    .filter-field input:hover, .filter-field select:hover,
+    .field input:hover, .field select:hover, .field textarea:hover { border-color: var(--text-muted); }
+    input::placeholder, textarea::placeholder { color: var(--text-muted); }
+    .filter-status { font-size: 0.85rem; color: var(--text-muted); margin-left: auto; align-self: center; }
 
     /* =========================================================
        Board and columns
@@ -200,59 +386,78 @@
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: var(--space-4);
-      padding: var(--space-5);
+      padding: var(--space-4) var(--space-5) var(--space-6);
       align-items: start;
     }
 
     .column {
-      background: var(--grey-200);
+      background: var(--sunken);
       border: 2px dashed transparent;
       border-radius: var(--radius-lg);
       padding: var(--space-3);
       min-height: 240px;
-      transition: background-color 0.15s, border-color 0.15s;
+      transition: background-color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
     }
     .column.drop-target {
-      background: var(--blue-100);
-      border-color: var(--blue-500);
+      background: var(--accent-soft);
+      border-color: var(--accent);
     }
 
     .column-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: var(--space-1) var(--space-2) var(--space-3);
+      padding: var(--space-1) var(--space-2) var(--space-1);
     }
-    .column-header h2 { font-size: 0.95rem; color: var(--blue-900); }
-    .column-desc { font-size: 0.75rem; color: var(--grey-700); padding: 0 var(--space-2) var(--space-3); }
+    .column-header h2 {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      font-family: var(--font-serif);
+      font-size: 1.05rem;
+      font-weight: 600;
+    }
+    .column-desc { font-size: 0.75rem; color: var(--text-muted); padding: 0 var(--space-2) var(--space-3); }
     .count-badge {
       min-width: 28px;
       text-align: center;
-      background: var(--blue-800);
-      color: var(--white);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
       border-radius: 999px;
-      padding: 2px var(--space-2);
+      padding: 0 var(--space-2);
       font-size: 0.8rem;
       font-weight: 700;
+      font-variant-numeric: tabular-nums;
     }
 
     .card-list { display: flex; flex-direction: column; gap: var(--space-3); min-height: 60px; }
-    .empty { font-size: 0.85rem; color: var(--grey-500); text-align: center; padding: var(--space-4) 0; }
+    .empty {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      text-align: center;
+      padding: var(--space-4) 0;
+      border: 1px dashed var(--border-strong);
+      border-radius: var(--radius-md);
+    }
 
     /* =========================================================
        Cards
        ========================================================= */
     .card {
-      background: var(--white);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--prio-medium);
       border-radius: var(--radius-md);
-      border-left: 6px solid var(--prio-medium);
       box-shadow: var(--shadow-card);
-      padding: var(--space-3);
+      padding: var(--space-3) var(--space-3) var(--space-3) var(--space-4);
       cursor: grab;
       display: flex;
       flex-direction: column;
       gap: var(--space-2);
+      transition: box-shadow var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease);
     }
+    .card:hover { box-shadow: var(--shadow-hover); transform: translateY(-1px); }
     .card.dragging { opacity: 0.45; }
     .card.prio-critical { border-left-color: var(--prio-critical); }
     .card.prio-high     { border-left-color: var(--prio-high); }
@@ -260,9 +465,9 @@
     .card.prio-low      { border-left-color: var(--prio-low); }
 
     .card-top { display: flex; align-items: center; gap: var(--space-2); }
-    .card-id { font-family: var(--font-mono); font-size: 0.75rem; color: var(--grey-700); }
-    .card-title { font-size: 0.95rem; line-height: 1.3; word-break: break-word; }
-    .card-project { font-size: 0.8rem; color: var(--blue-700); font-weight: 600; }
+    .card-id { font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted); }
+    .card-title { font-size: 0.95rem; font-weight: 600; line-height: 1.35; word-break: break-word; }
+    .card-project { font-size: 0.8rem; color: var(--accent-fg); font-weight: 600; }
 
     .card-meta {
       display: grid;
@@ -271,53 +476,73 @@
       margin: 0;
       font-size: 0.8rem;
     }
-    .card-meta dt { color: var(--grey-500); }
+    .card-meta dt { color: var(--text-muted); }
     .card-meta dd { margin: 0; word-break: break-word; }
 
     .card-tags { display: flex; flex-wrap: wrap; gap: var(--space-1); }
 
     .pill, .tag, .badge-overdue {
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-1);
       border-radius: 999px;
       padding: 1px var(--space-2);
       font-size: 0.72rem;
       font-weight: 700;
       line-height: 1.6;
     }
-    .pill-critical { background: var(--prio-critical); color: var(--white); }
-    .pill-high     { background: var(--prio-high); color: var(--grey-900); }
-    .pill-medium   { background: var(--prio-medium); color: var(--white); }
-    .pill-low      { background: var(--grey-200); color: var(--grey-900); }
-    .tag { background: var(--blue-50); color: var(--blue-800); border: 1px solid var(--blue-100); font-weight: 600; }
-    .badge-overdue { background: var(--danger-bg); color: var(--danger-fg); border: 1px solid #f3c2c2; }
+    .pill-critical { background: var(--prio-critical); color: var(--on-prio); }
+    .pill-high     { background: var(--prio-high); color: var(--on-prio-high); }
+    .pill-medium   { background: var(--prio-medium); color: var(--on-prio); }
+    .pill-low      { background: var(--sunken); color: var(--text); border: 1px solid var(--border); }
+    .tag { background: var(--surface-2); color: var(--text-muted); border: 1px solid var(--border); font-weight: 600; }
+    .badge-overdue { background: var(--danger-bg); color: var(--danger-fg); border: 1px solid var(--danger-border); }
 
     .icon-btn {
       margin-left: auto;
-      width: 28px;
-      height: 28px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
       border: none;
       border-radius: var(--radius-sm);
       background: transparent;
-      color: var(--grey-500);
-      font-size: 1.2rem;
-      line-height: 1;
+      color: var(--text-muted);
       cursor: pointer;
+      transition: background-color var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
     }
+    .icon-btn .icon { width: 16px; height: 16px; }
     .icon-btn:hover { background: var(--danger-bg); color: var(--danger-fg); }
 
-    .card-actions { display: flex; gap: var(--space-2); }
+    .card-actions { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); }
     .btn-small {
-      padding: 2px var(--space-2);
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-1);
+      min-height: 30px;
+      padding: 2px var(--space-3);
       font-size: 0.78rem;
       border-radius: var(--radius-sm);
-      border: 1px solid var(--grey-300);
-      background: var(--white);
-      color: var(--blue-800);
+      border: 1px solid var(--border-strong);
+      background: var(--surface);
+      color: var(--text);
       font-weight: 600;
       cursor: pointer;
+      transition: background-color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
     }
-    .btn-small:hover { background: var(--blue-50); }
-    .btn-small.danger { background: var(--prio-critical); border-color: var(--prio-critical); color: var(--white); }
+    .btn-small:hover { background: var(--accent-soft); border-color: var(--accent); }
+    .btn-small.danger { background: var(--prio-critical); border-color: var(--prio-critical); color: var(--on-prio); }
+    .btn-small .icon { width: 12px; height: 12px; }
+
+    /* Stage stepper: Backlog → In Progress → Done */
+    .stage { display: inline-flex; align-items: center; gap: var(--space-2); font-size: 0.72rem; color: var(--text-muted); }
+    .stage-track { display: inline-flex; gap: 3px; }
+    .stage-step { width: 18px; height: 6px; border-radius: 999px; background: var(--track); }
+    .stage-backlog .is-on     { background: var(--status-backlog); }
+    .stage-in-progress .is-on { background: var(--status-progress); }
+    .stage-blocked .is-on     { background: var(--status-blocked); }
+    .stage-done .is-on        { background: var(--status-done); }
 
     .move-menu, .delete-confirm {
       display: flex;
@@ -328,7 +553,7 @@
       border-radius: var(--radius-sm);
       font-size: 0.8rem;
     }
-    .move-menu { background: var(--blue-50); }
+    .move-menu { background: var(--surface-2); border: 1px solid var(--border); }
     .delete-confirm { background: var(--danger-bg); color: var(--danger-fg); font-weight: 600; }
 
     /* =========================================================
@@ -337,7 +562,7 @@
     .modal-backdrop {
       position: fixed;
       inset: 0;
-      background: rgba(11, 37, 69, 0.55);
+      background: var(--backdrop);
       display: flex;
       align-items: flex-start;
       justify-content: center;
@@ -348,33 +573,28 @@
     .modal-backdrop[hidden] { display: none; }
 
     .modal {
-      background: var(--white);
+      background: var(--surface-2);
+      border: 1px solid var(--border);
       border-radius: var(--radius-lg);
       box-shadow: var(--shadow-pop);
       width: 100%;
       max-width: 620px;
       padding: var(--space-5);
+      animation: rise var(--dur-fast) var(--ease);
     }
     .modal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-4); }
-    .modal-head h2 { font-size: 1.2rem; color: var(--blue-900); }
+    .modal-head h2 { font-family: var(--font-serif); font-size: 1.4rem; font-weight: 600; }
     .modal-head .icon-btn { margin-left: 0; }
-    .modal-head .icon-btn:hover { background: var(--grey-100); color: var(--grey-900); }
+    .modal-head .icon-btn:hover { background: var(--sunken); color: var(--text); }
 
     .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3) var(--space-4); }
     .field { display: flex; flex-direction: column; gap: var(--space-1); }
     .field.full { grid-column: 1 / -1; }
-    .field label { font-size: 0.85rem; font-weight: 600; color: var(--grey-700); }
+    .field label { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); }
     .field .req { color: var(--danger-fg); }
-    .field input, .field select, .field textarea {
-      padding: var(--space-2) var(--space-3);
-      border: 1px solid var(--grey-300);
-      border-radius: var(--radius-sm);
-      background: var(--white);
-      min-height: 38px;
-    }
     .field textarea { resize: vertical; min-height: 80px; }
-    .field [aria-invalid="true"] { border-color: var(--prio-critical); background: #fffafa; }
-    .field-hint { font-size: 0.75rem; color: var(--grey-500); }
+    .field [aria-invalid="true"] { border-color: var(--danger-fg); background: var(--danger-bg); }
+    .field-hint { font-size: 0.75rem; color: var(--text-muted); }
     .field-error { font-size: 0.8rem; color: var(--danger-fg); min-height: 1em; }
     .field-error:empty { display: none; }
 
@@ -396,23 +616,36 @@
     .toast {
       padding: var(--space-3) var(--space-4);
       border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      border-left: 4px solid;
       box-shadow: var(--shadow-pop);
       font-size: 0.9rem;
       font-weight: 600;
-      border-left: 5px solid;
+      animation: rise var(--dur-fast) var(--ease);
     }
-    .toast-success { background: var(--success-bg); color: var(--success-fg); border-color: var(--success-fg); }
-    .toast-warning { background: var(--warning-bg); color: var(--warning-fg); border-color: var(--prio-high); }
-    .toast-info    { background: var(--blue-50); color: var(--blue-800); border-color: var(--blue-600); }
+    .toast-success { background: var(--success-bg); color: var(--success-fg); border-left-color: var(--status-done); }
+    .toast-warning { background: var(--warning-bg); color: var(--warning-fg); border-left-color: var(--prio-high); }
+    .toast-info    { background: var(--surface); color: var(--text); border-left-color: var(--accent); }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: none; }
+    }
 
     /* =========================================================
-       Responsive: stack columns below 768px
+       Responsive: 4 → 2 → 1 columns; progress panel stacks
        ========================================================= */
+    @media (max-width: 900px) {
+      .progress-panel { grid-template-columns: 1fr; }
+    }
     @media (max-width: 1100px) and (min-width: 768px) {
       .board { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
     @media (max-width: 767px) {
-      .app-header, .filters, .board, .demo-note { padding-left: var(--space-4); padding-right: var(--space-4); }
+      .app-header, .filters, .board { padding-left: var(--space-4); padding-right: var(--space-4); }
+      .demo-note, .progress-panel { margin-left: var(--space-4); margin-right: var(--space-4); }
+      .panel { padding: var(--space-4); }
+      .wordmark small { display: none; }
       .board { grid-template-columns: 1fr; }
       .filter-field { min-width: 0; flex: 1 1 100%; }
       .filter-status { margin-left: 0; }
@@ -424,20 +657,53 @@
 <body>
 
   <!-- =========================================================
-       Header: text wordmark, live summary strip, Add Task button
+       Header: text wordmark and Add Task button
        ========================================================= -->
   <header class="app-header">
-    <div class="wordmark">IT PMO <small>Project Board · Training Demo</small></div>
-    <ul class="summary" id="summary" aria-label="Board summary"></ul>
-    <button type="button" class="btn btn-light" id="open-add">
-      <span aria-hidden="true">+</span> Add Task
-    </button>
+    <div class="wordmark">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true">
+        <path d="M12 3v18M3 12h18M5.6 5.6l12.8 12.8M18.4 5.6 5.6 18.4"/>
+      </svg>
+      IT PMO <small>Project Board · Training Demo</small>
+    </div>
+    <div class="header-actions">
+      <button type="button" class="btn btn-primary" id="open-add">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+        Add Task
+      </button>
+      <!-- Icon and label are set by applyTheme() -->
+      <button type="button" class="btn btn-ghost btn-icon" id="theme-toggle"></button>
+    </div>
   </header>
 
   <p class="demo-note" role="note">
-    <span aria-hidden="true">ⓘ</span>
+    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg>
     Demo only. Board data is held in memory. Refreshing the page resets it to the sample tasks.
   </p>
+
+  <!-- =========================================================
+       Progress panel: bars are updated in place by renderProgress()
+       ========================================================= -->
+  <section class="progress-panel" id="progress" aria-labelledby="progress-heading">
+    <div class="panel">
+      <h2 class="panel-title" id="progress-heading">Portfolio progress</h2>
+      <div class="overall">
+        <span class="overall-pct" id="overall-pct">0%</span>
+        <span class="overall-caption" id="overall-caption"></span>
+      </div>
+      <div class="bar bar-lg" id="overall-bar" role="progressbar" aria-label="Overall completion" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+        <span class="bar-fill" id="overall-fill"></span>
+      </div>
+      <h3 class="panel-subtitle">Status mix</h3>
+      <div class="stack-bar" id="status-stack" aria-hidden="true"></div>
+      <ul class="summary" id="summary" aria-label="Board summary"></ul>
+    </div>
+    <div class="panel">
+      <h2 class="panel-title">Progress by project</h2>
+      <ul class="project-list" id="project-progress"></ul>
+      <p class="project-empty" id="project-empty" hidden>No tasks on the board yet.</p>
+    </div>
+  </section>
 
   <!-- =========================================================
        Filter bar
@@ -476,7 +742,7 @@
     <div class="modal" role="dialog" aria-modal="true" aria-labelledby="add-title">
       <div class="modal-head">
         <h2 id="add-title">Add Task</h2>
-        <button type="button" class="icon-btn" id="close-add" aria-label="Close Add Task dialog">×</button>
+        <button type="button" class="icon-btn" id="close-add" aria-label="Close Add Task dialog"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
       </div>
 
       <form id="add-form" novalidate>
@@ -575,6 +841,21 @@
     ];
     const PRIORITIES = ["Critical", "High", "Medium", "Low"];
 
+    // Card stage stepper: Blocked sits on the In Progress step.
+    const STAGES = { "Backlog": 1, "In Progress": 2, "Blocked": 2, "Done": 3 };
+    const STAGE_COUNT = 3;
+
+    /* =========================================================
+       Inline SVG icons (decorative; callers supply text labels)
+       ========================================================= */
+    const svg = (paths) =>
+      `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${paths}</svg>`;
+    const ICON_CLOSE = svg(`<path d="M6 6l12 12M18 6 6 18"/>`);
+    const ICON_WARN = svg(`<path d="M12 4 2.5 20h19z"/><path d="M12 10v4M12 17h.01"/>`);
+    const ICON_CHEVRON = svg(`<path d="m9 6 6 6-6 6"/>`);
+    const ICON_SUN = svg(`<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>`);
+    const ICON_MOON = svg(`<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>`);
+
     /* =========================================================
        State: the single source of truth (in memory only)
        ========================================================= */
@@ -582,9 +863,10 @@
       tasks: [],
       filters: { project: "", assignee: "", priority: "" },
       ui: {
-        openMoveId: null,      // card whose "Move ▸" menu is open
+        openMoveId: null,      // card whose "Move" menu is open
         pendingDeleteId: null, // card showing "Delete? Yes / No"
-        focusAfterRender: null // { id, action } to restore keyboard focus
+        focusAfterRender: null, // { id, action } to restore keyboard focus
+        theme: "light",         // "light" | "dark"; starts from the OS preference, not persisted
       },
       nextId: 1,
       sending: false,
@@ -637,6 +919,10 @@
 
     function slug(text) {
       return text.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+    }
+
+    function pct(part, whole) {
+      return whole ? Math.round((part / whole) * 100) : 0;
     }
 
     function fillSelect(select, values, selected) {
@@ -698,8 +984,13 @@
       const isDeletePending = state.ui.pendingDeleteId === task.id;
 
       const overdue = isOverdue(task)
-        ? `<span class="badge-overdue"><span aria-hidden="true">⚠ </span>Overdue</span>`
+        ? `<span class="badge-overdue">${ICON_WARN}Overdue</span>`
         : "";
+
+      const stage = STAGES[task.status];
+      const stageSteps = Array.from({ length: STAGE_COUNT }, (_, i) =>
+        `<span class="stage-step${i < stage ? " is-on" : ""}"></span>`
+      ).join("");
 
       const moveMenu = isMoveOpen
         ? `<div class="move-menu" role="group" aria-label="Move ${id} to column">
@@ -724,7 +1015,7 @@
           <div class="card-top">
             <span class="card-id">${id}</span>
             ${overdue}
-            <button type="button" class="icon-btn" data-action="delete" aria-label="Delete task ${id}">×</button>
+            <button type="button" class="icon-btn" data-action="delete" aria-label="Delete task ${id}">${ICON_CLOSE}</button>
           </div>
           <h3 class="card-title" id="${titleId}">${escapeHtml(task.title)}</h3>
           <p class="card-project">${escapeHtml(task.project)}</p>
@@ -737,7 +1028,11 @@
             <span class="tag">${escapeHtml(task.category)}</span>
           </div>
           <div class="card-actions">
-            <button type="button" class="btn-small" data-action="toggle-move" aria-expanded="${isMoveOpen}">Move ▸</button>
+            <button type="button" class="btn-small" data-action="toggle-move" aria-expanded="${isMoveOpen}">Move ${ICON_CHEVRON}</button>
+            <span class="stage stage-${slug(task.status)}">
+              <span class="stage-track" aria-hidden="true">${stageSteps}</span>
+              <span class="visually-hidden">Stage ${stage} of ${STAGE_COUNT}: ${escapeHtml(task.status)}</span>
+            </span>
           </div>
           ${moveMenu}
           ${deleteConfirm}
@@ -752,11 +1047,57 @@
         if (isOverdue(t)) overdue += 1;
       });
       const items = [
-        `<li>Total<strong>${state.tasks.length}</strong></li>`,
-        ...STATUSES.map((s) => `<li>${escapeHtml(s.key)}<strong>${counts[s.key]}</strong></li>`),
-        `<li class="summary-overdue"><span aria-hidden="true">⚠ </span>Overdue<strong>${overdue}</strong></li>`,
+        `<li>Total <strong>${state.tasks.length}</strong></li>`,
+        ...STATUSES.map((s) =>
+          `<li><span class="status-dot dot-${slug(s.key)}" aria-hidden="true"></span>${escapeHtml(s.key)} <strong>${counts[s.key]}</strong></li>`),
+        `<li class="summary-overdue">${ICON_WARN}Overdue <strong>${overdue}</strong></li>`,
       ];
       document.getElementById("summary").innerHTML = items.join("");
+    }
+
+    // Progress bars are built once, then updated in place so their widths animate.
+    function renderProgress() {
+      const total = state.tasks.length;
+      const done = state.tasks.filter((t) => t.status === "Done").length;
+      const overall = pct(done, total);
+
+      document.getElementById("overall-pct").textContent = overall + "%";
+      document.getElementById("overall-caption").textContent = `${done} of ${total} tasks done`;
+      document.getElementById("overall-fill").style.width = overall + "%";
+      document.getElementById("overall-bar").setAttribute("aria-valuenow", overall);
+
+      const stack = document.getElementById("status-stack");
+      if (!stack.children.length) {
+        stack.innerHTML = STATUSES.map((s) => `<span class="stack-seg seg-${slug(s.key)}"></span>`).join("");
+      }
+      STATUSES.forEach((s, i) => {
+        const count = state.tasks.filter((t) => t.status === s.key).length;
+        stack.children[i].style.width = (total ? (count / total) * 100 : 0) + "%";
+      });
+
+      const list = document.getElementById("project-progress");
+      if (!list.children.length) {
+        list.innerHTML = PROJECTS.map((p) => `
+          <li class="project-row" data-project="${escapeHtml(p)}">
+            <span class="project-name">${escapeHtml(p)}</span>
+            <span class="project-stat"></span>
+            <div class="bar" role="progressbar" aria-label="${escapeHtml(p)} completion" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+              <span class="bar-fill"></span>
+            </div>
+          </li>`).join("");
+      }
+      let shown = 0;
+      Array.from(list.children).forEach((row) => {
+        const tasks = state.tasks.filter((t) => t.project === row.dataset.project);
+        const projectDone = tasks.filter((t) => t.status === "Done").length;
+        const value = pct(projectDone, tasks.length);
+        row.hidden = tasks.length === 0;
+        if (!row.hidden) shown += 1;
+        row.querySelector(".project-stat").textContent = `${projectDone}/${tasks.length} · ${value}%`;
+        row.querySelector(".bar-fill").style.width = value + "%";
+        row.querySelector(".bar").setAttribute("aria-valuenow", value);
+      });
+      document.getElementById("project-empty").hidden = shown > 0;
     }
 
     function renderBoard() {
@@ -769,7 +1110,7 @@
         return `
           <section class="column" data-status="${escapeHtml(s.key)}" aria-labelledby="${colId}">
             <div class="column-header">
-              <h2 id="${colId}">${escapeHtml(s.key)}</h2>
+              <h2 id="${colId}"><span class="status-dot dot-${slug(s.key)}" aria-hidden="true"></span>${escapeHtml(s.key)}</h2>
               <span class="count-badge" aria-label="${tasks.length} tasks">${tasks.length}</span>
             </div>
             <p class="column-desc">${escapeHtml(s.desc)}</p>
@@ -780,6 +1121,7 @@
       }).join("");
 
       renderSummary();
+      renderProgress();
 
       document.getElementById("filter-status").textContent = hasActiveFilters()
         ? `Showing ${visible.length} of ${state.tasks.length} tasks`
@@ -1101,9 +1443,31 @@
     }
 
     /* =========================================================
+       Theme toggle (light / dark), header top right
+       ========================================================= */
+    const themeBtn = document.getElementById("theme-toggle");
+
+    function applyTheme(theme) {
+      state.ui.theme = theme;
+      document.documentElement.dataset.theme = theme;
+      const next = theme === "dark" ? "light" : "dark";
+      // Show the icon of the mode the button switches to.
+      themeBtn.innerHTML = theme === "dark" ? ICON_SUN : ICON_MOON;
+      themeBtn.setAttribute("aria-label", `Switch to ${next} mode`);
+      themeBtn.title = `Switch to ${next} mode`;
+    }
+
+    function bindTheme() {
+      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)");
+      applyTheme(prefersDark.matches ? "dark" : "light");
+      themeBtn.addEventListener("click", () => applyTheme(state.ui.theme === "dark" ? "light" : "dark"));
+    }
+
+    /* =========================================================
        Init
        ========================================================= */
     function init() {
+      bindTheme();
       appendOptions(document.getElementById("filter-project"), PROJECTS);
       appendOptions(document.getElementById("filter-priority"), PRIORITIES);
       fillSelect(document.getElementById("f-project"), PROJECTS, PROJECTS[0]);

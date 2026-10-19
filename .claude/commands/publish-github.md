@@ -1,7 +1,7 @@
 ---
 description: Security-scan the project, push it to GitHub, write the README and About section, and deploy GitHub Pages with a CI/CD workflow
 argument-hint: <github repo, e.g. owner/repo or https://github.com/owner/repo> [public|private]
-allowed-tools: Bash(git:*), Bash(gh:*), Bash(node:*), Bash(grep:*), Bash(ls:*), Bash(cat:*), Read, Write, Edit, Glob, Grep
+allowed-tools: Bash(git:*), Bash(gh:*), Bash(node:*), Bash(grep:*), Bash(ls:*), Bash(cat:*), Read, Write, Edit, Glob, Grep, mcp__playwright__browser_resize, mcp__playwright__browser_navigate, mcp__playwright__browser_take_screenshot, mcp__playwright__browser_close
 ---
 
 # Publish this project to GitHub
@@ -62,6 +62,7 @@ If `README.md` exists, read it and keep any content that is still accurate. The 
   - a GitHub Pages / live demo badge linking to the Pages URL
   - a license badge, only if a LICENSE file exists
 - a **Live demo** link: `https://OWNER.github.io/REPO/`
+- a **screenshot** of the live site under the Live demo link: `![…](docs/screenshot.png)` (captured in step 7)
 - **Features**: a short list taken from what `index.html` actually does (columns, drag and drop, filters, Move menu, inline delete, email notification through FormSubmit, overdue tasks)
 - **How to install**: `git clone https://github.com/OWNER/REPO.git` and `cd REPO`. No npm or build step is needed.
 - **How to run**: open `index.html` in a browser (`open index.html` on macOS, double-click on Windows), or use the live demo. Mention that refreshing resets the board on purpose, because nothing is stored.
@@ -118,17 +119,31 @@ Pin each action to a current major version (for example `@v4`).
    curl -sI <url> | head -1
    ```
 
-## 7. Add the Pages link to the About section
+## 7. Capture a screenshot of the live site
+
+Use the Playwright MCP server (configured in `.mcp.json`). If its tools are not available, tell the user to reload Claude Code and approve the `playwright` server, then stop this step and carry on with step 8.
+
+1. `browser_resize` to 1440 × 900.
+2. `browser_navigate` to the Pages URL from step 6.
+3. `browser_take_screenshot` with `filename: "docs/screenshot.png"`, `type: "png"` and `scale: "css"` (viewport only, not full page).
+4. Read the image and check that it shows the header, the filters and all four columns with cards. Retake it if the page had not finished loading.
+5. `browser_close`.
+6. Make sure the README shows the image under the Live demo link: `![IT PMO Kanban board with Backlog, In Progress, Blocked and Done columns](docs/screenshot.png)`.
+7. Do not commit `.playwright-mcp/` (it holds Playwright's snapshots and console logs). Commit `docs/screenshot.png` and the README, then push.
+
+The deploy job copies only `index.html`, so the screenshot appears in the README on GitHub but is not published to Pages.
+
+## 8. Add the Pages link to the About section
 
 Run `gh repo edit OWNER/REPO --homepage "<pages url>"` with the real URL from step 6. If the URL differs from the one used in the README, update the README and push again.
 
-## 8. Final security check of what is public
+## 9. Final security check of what is public
 
 - Run `git ls-files` on the pushed branch and confirm that no file flagged in step 1 is in it.
 - Confirm the Pages artifact holds only the site files: open `<pages url>/CLAUDE.md` and `<pages url>/.claude/` and check they return 404.
 - Confirm the live page makes no network request except FormSubmit, by re-running the constraint grep on the deployed `index.html`.
 
-## 9. Report
+## 10. Report
 
 Finish with a short summary:
 

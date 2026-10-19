@@ -34,7 +34,8 @@ There is no build, lint or test tooling.
 ## Architecture (inside the `<script>` block)
 
 - **One state object.** `state` holds `tasks`, `filters`, `ui` (`openMoveId`, `pendingDeleteId`, `focusAfterRender`), `nextId` and `sending`. It is the only source of truth.
-- **Re-render instead of patching.** Every change edits `state` and then calls `renderBoard()`, which rebuilds all columns from scratch. `renderBoard()` builds each card with `renderCard()` and then calls `renderSummary()`. Do not change card DOM anywhere else.
+- **Re-render instead of patching.** Every change edits `state` and then calls `renderBoard()`, which rebuilds all columns from scratch. `renderBoard()` builds each card with `renderCard()` and then calls `renderSummary()` and `renderProgress()`. Do not change card DOM anywhere else.
+  - `renderProgress()` is the one exception to rebuilding: it builds the progress-panel bars once and then updates their widths and `aria-valuenow` in place, so the CSS width transitions animate.
   - Inline UI states (an open Move menu or a pending delete) live in `state.ui`, so they survive a re-render.
   - `restoreFocus()` uses `state.ui.focusAfterRender` to put keyboard focus back after the DOM is replaced.
 - **Escape everything in templates.** All user-supplied strings in HTML template strings must go through `escapeHtml()`.
