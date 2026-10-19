@@ -29,6 +29,8 @@ An IT PMO Kanban board, built as a demo and training tool for a fictitious bank.
 - **Inline delete** that asks "Delete? Yes / No" on the card itself.
 - **Overdue tasks** get a badge, and the progress panel counts them. Seed due dates are set relative to today, so the demo always has some overdue work.
 - **Email notification** through [FormSubmit](https://formsubmit.co) when a task is added. The card appears at once, and a warning toast shows if the email fails.
+- **Chat widget:** a floating WhatsApp button (a plain `wa.me` link) that speaks a short greeting with the browser's built-in speech synthesis.
+- **Security briefing notice:** an in-page dialog shown once, 10 seconds after the page loads.
 - Accessible markup: labelled controls, live regions for status messages, and keyboard focus restored after each update.
 
 ## How to install
@@ -65,7 +67,7 @@ const FORMSUBMIT_ENDPOINT = "https://formsubmit.co/ajax/YOUR_EMAIL@example.com";
 
 - **check** job:
   - a JS syntax check of the inline script
-  - a constraint check that fails on `localStorage`, `sessionStorage`, `indexedDB`, `document.cookie`, `confirm(`, `alert(`, `!important`, or any URL other than formsubmit.co
+  - a constraint check that fails on `localStorage`, `sessionStorage`, `indexedDB`, `document.cookie`, `confirm(`, `alert(`, `!important`, or any URL other than formsubmit.co and wa.me
   - a secret scan for keys and tokens, and for files such as `.env` or `*.pem`
 - **deploy** job (pushes to `main` only): copies only `index.html` into `_site/` and deploys it to GitHub Pages.
 
@@ -75,7 +77,7 @@ const FORMSUBMIT_ENDPOINT = "https://formsubmit.co/ajax/YOUR_EMAIL@example.com";
 - Works from `file://` with no server.
 - No external resources: no CDN scripts, web fonts or images. It uses system font stacks and inline SVG icons.
 - No persistence of any kind: no localStorage, sessionStorage, IndexedDB or cookies.
-- One network call only, to the FormSubmit endpoint.
+- One network call only, to the FormSubmit endpoint. The only other URL is the user-clicked `wa.me` chat link.
 - No native `alert()` or `confirm()` dialogs, and no `!important`.
 - No real bank branding. The wordmark is the plain text "IT PMO".
 

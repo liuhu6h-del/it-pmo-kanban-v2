@@ -17,3 +17,8 @@ node_modules/
 
 # Local Claude Code settings
 .claude/settings.local.json
+
+# Personal / third-party files (never commit, see CLAUDE.md)
+*.docx
+.claude/skills/
+skills-lock.json
