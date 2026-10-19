@@ -51,6 +51,11 @@
       --focus-ring: #c15f3c;
       --backdrop:   rgba(31, 30, 29, 0.5);
 
+      --chat-bg:       #1f8a52;
+      --chat-bg-hover: #187344;
+      --on-chat:       #ffffff;
+      --chat-size:     56px;
+
       --space-1: 4px;
       --space-2: 8px;
       --space-3: 12px;
@@ -112,6 +117,10 @@
 
         --focus-ring: #d97757;
         --backdrop:   rgba(0, 0, 0, 0.6);
+
+        --chat-bg:       #2a9d5f;
+        --chat-bg-hover: #33b06c;
+        --on-chat:       #ffffff;
 
         --shadow-card:  0 1px 2px rgba(0, 0, 0, 0.3);
         --shadow-hover: 0 6px 16px rgba(0, 0, 0, 0.35);
@@ -582,6 +591,21 @@
       padding: var(--space-5);
       animation: rise var(--dur-fast) var(--ease);
     }
+    .modal-notice { max-width: 440px; margin-top: 15vh; }
+    .notice-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--warning-bg);
+      color: var(--warning-fg);
+      margin-bottom: var(--space-3);
+    }
+    .notice-icon .icon { width: 22px; height: 22px; }
+    .notice-body { color: var(--text); }
+    .notice-body strong { color: var(--danger-fg); }
     .modal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-4); }
     .modal-head h2 { font-family: var(--font-serif); font-size: 1.4rem; font-weight: 600; }
     .modal-head .icon-btn { margin-left: 0; }
@@ -601,12 +625,54 @@
     .form-actions { display: flex; justify-content: flex-end; gap: var(--space-2); margin-top: var(--space-5); }
 
     /* =========================================================
+       Floating WhatsApp chat widget (bottom right)
+       ========================================================= */
+    .chat-widget {
+      position: fixed;
+      right: var(--space-4);
+      bottom: var(--space-4);
+      z-index: 40;
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+    }
+    .chat-fab {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: var(--chat-size);
+      height: var(--chat-size);
+      border-radius: 50%;
+      background: var(--chat-bg);
+      color: var(--on-chat);
+      box-shadow: var(--shadow-pop);
+      transition: background var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease);
+    }
+    .chat-fab:hover { background: var(--chat-bg-hover); transform: translateY(-2px); }
+    .chat-fab:focus-visible { outline: 3px solid var(--focus-ring); outline-offset: 3px; }
+    .chat-fab .icon { width: 28px; height: 28px; }
+    .chat-bubble {
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-hover);
+      padding: var(--space-2) var(--space-3);
+      font-size: 0.9rem;
+      font-weight: 600;
+      animation: rise var(--dur-fast) var(--ease);
+    }
+    .chat-bubble[hidden] { display: none; }
+    /* Room so the last cards can scroll clear of the floating button */
+    body { padding-bottom: calc(var(--chat-size) + var(--space-5)); }
+
+    /* =========================================================
        Toasts
        ========================================================= */
     .toast-region {
       position: fixed;
       right: var(--space-4);
-      bottom: var(--space-4);
+      bottom: calc(var(--space-4) + var(--chat-size) + var(--space-3));
       display: flex;
       flex-direction: column;
       gap: var(--space-2);
@@ -803,6 +869,31 @@
     </div>
   </div>
 
+  <!-- Security briefing notice: shown once, 10 s after the page loads -->
+  <div class="modal-backdrop" id="briefing-modal" hidden>
+    <div class="modal modal-notice" role="alertdialog" aria-modal="true"
+         aria-labelledby="briefing-title" aria-describedby="briefing-desc">
+      <span class="notice-icon"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4 2.5 20h19z"/><path d="M12 10v4M12 17h.01"/></svg></span>
+      <div class="modal-head">
+        <h2 id="briefing-title">IT Security Briefing</h2>
+      </div>
+      <p class="notice-body" id="briefing-desc">
+        There is an IT security briefing at the <b>Town Hall</b> on <b>Wednesday at 10am</b>.
+        <strong>Attendance is mandatory.</strong>
+      </p>
+      <div class="form-actions">
+        <button type="button" class="btn btn-primary" id="briefing-ack">Acknowledge</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating chat widget: opens WhatsApp (href set from CONFIG) and speaks a greeting -->
+  <div class="chat-widget">
+    <p class="chat-bubble" id="chat-bubble" role="status" hidden></p>
+    <a class="chat-fab" id="chat-fab" target="_blank" rel="noopener noreferrer"
+       aria-label="Chat with IT PMO on WhatsApp (opens in a new tab)" title="Chat with us on WhatsApp"></a>
+  </div>
+
   <!-- Toast notifications (announced politely to screen readers) -->
   <div class="toast-region" id="toasts" aria-live="polite" aria-atomic="false"></div>
 
@@ -821,6 +912,10 @@
        ========================================================= */
     const FORMSUBMIT_ENDPOINT = "https://formsubmit.co/ajax/YOUR_EMAIL@example.com";
     const NOTIFY_TIMEOUT_MS = 15000;
+    const WHATSAPP_NUMBER = "6512345678";
+    const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}`;
+    const CHAT_GREETING = "How can I help you?";
+    const BRIEFING_DELAY_MS = 10000;
 
     /* =========================================================
        Reference data
@@ -854,6 +949,7 @@
     const ICON_WARN = svg(`<path d="M12 4 2.5 20h19z"/><path d="M12 10v4M12 17h.01"/>`);
     const ICON_CHEVRON = svg(`<path d="m9 6 6 6-6 6"/>`);
     const ICON_SUN = svg(`<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>`);
+    const ICON_CHAT = svg(`<path d="M21 11.5a8.4 8.4 0 0 1-12.3 7.5L3 21l2-5.5A8.4 8.4 0 1 1 21 11.5z"/><path d="M8.5 11.5h.01M12 11.5h.01M15.5 11.5h.01"/>`);
     const ICON_MOON = svg(`<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>`);
 
     /* =========================================================
@@ -1464,10 +1560,60 @@
     }
 
     /* =========================================================
+       Chat widget: speak a greeting, then let the link open WhatsApp
+       ========================================================= */
+    function bindChatWidget() {
+      const fab = document.getElementById("chat-fab");
+      const bubble = document.getElementById("chat-bubble");
+      let hideTimer = null;
+      fab.href = WHATSAPP_URL;
+      fab.innerHTML = ICON_CHAT;
+      fab.addEventListener("click", () => {
+        bubble.textContent = CHAT_GREETING;
+        bubble.hidden = false;
+        clearTimeout(hideTimer);
+        hideTimer = setTimeout(() => { bubble.hidden = true; }, 4000);
+        if ("speechSynthesis" in window) {
+          window.speechSynthesis.cancel();
+          window.speechSynthesis.speak(new SpeechSynthesisUtterance(CHAT_GREETING));
+        }
+      });
+    }
+
+    /* =========================================================
+       Security briefing notice: once per page load, after 10 s.
+       Waits if the Add Task dialog is open, so it never stacks on top.
+       ========================================================= */
+    const briefing = document.getElementById("briefing-modal");
+    const briefingAck = document.getElementById("briefing-ack");
+    let briefingReturnFocus = null;
+
+    function showBriefing() {
+      if (!modal.hidden) { setTimeout(showBriefing, 1000); return; }
+      briefingReturnFocus = document.activeElement;
+      briefing.hidden = false;
+      briefingAck.focus();
+    }
+
+    function closeBriefing() {
+      briefing.hidden = true;
+      if (briefingReturnFocus && document.contains(briefingReturnFocus)) briefingReturnFocus.focus();
+    }
+
+    function bindBriefing() {
+      briefingAck.addEventListener("click", closeBriefing);
+      // Only one focusable control, so Tab stays on it.
+      briefing.addEventListener("keydown", (e) => { if (e.key === "Tab") { e.preventDefault(); briefingAck.focus(); } });
+      setTimeout(showBriefing, BRIEFING_DELAY_MS);
+    }
+
+    /* =========================================================
        Init
        ========================================================= */
     function init() {
       bindTheme();
+      bindChatWidget();
+      bindBriefing();
       appendOptions(document.getElementById("filter-project"), PROJECTS);
       appendOptions(document.getElementById("filter-priority"), PRIORITIES);
       fillSelect(document.getElementById("f-project"), PROJECTS, PROJECTS[0]);
@@ -1492,6 +1638,7 @@
 
       document.addEventListener("keydown", (e) => {
         if (e.key !== "Escape") return;
+        if (!briefing.hidden) { closeBriefing(); return; }
         if (!modal.hidden) { closeModal(); return; }
         if (state.ui.openMoveId || state.ui.pendingDeleteId) {
           const id = state.ui.openMoveId || state.ui.pendingDeleteId;

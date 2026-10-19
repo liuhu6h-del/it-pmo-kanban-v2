@@ -13,6 +13,7 @@ An IT PMO Kanban board: an internal demo and training tool for a fictitious bank
 - **No external resources.** That means no CDN scripts, web fonts or image files. Use the system font stacks (`--font`, `--font-serif`, `--font-mono`) and inline SVG icons. Design skills such as `.claude/skills/ui-ux-pro-max` may suggest Google Fonts or GSAP; ignore those parts.
 - **No persistence of any kind.** Do not use localStorage, sessionStorage, IndexedDB or cookies. Refreshing resets the board to the seed data on purpose, and the UI shows a note that says so.
 - **Only one network call.** The FormSubmit AJAX endpoint (`FORMSUBMIT_ENDPOINT`, in the `CONFIG` block at the top of the script) is the only network target. Keep the email address in that one constant.
+  - The floating chat widget is a plain link to `WHATSAPP_URL` (`https://wa.me/…`, built from `WHATSAPP_NUMBER` in `CONFIG`). It is user-initiated navigation, not a network call, and is the only other allowed URL. Its greeting is spoken with the browser's built-in `speechSynthesis` (no audio files).
 - **No UOB branding.** Do not use UOB's real logo or trademarks, and do not imitate an official UOB system. The wordmark is the plain text "IT PMO". The `UOB-ITPM-####` task ID format and the `[UOB IT PMO]` email subject are kept because the spec asks for them.
 - **No native dialogs.** Do not use `alert()` or `confirm()`. Delete uses an inline "Delete? Yes / No" inside the card, and validation errors appear inline under each field.
 - **No `!important`.** Colours, spacing and motion come from the semantic CSS custom properties on `:root`, such as `--bg`, `--surface`, `--accent`, `--status-*`, `--prio-*` and `--dur-*`. Component rules never use raw hex values.
@@ -28,12 +29,17 @@ There is no build, lint or test tooling.
   ```sh
   node -e 'const h=require("fs").readFileSync("index.html","utf8");new Function(h.split("<script>")[1].split("</script>")[0]);console.log("ok")'
   ```
-- Check for constraint violations (the only hit should be the formsubmit.co URL):
+- Check for constraint violations (the only hits should be the formsubmit.co and wa.me URLs):
   ```sh
   grep -nE 'localStorage|sessionStorage|indexedDB|document\.cookie|confirm\(|alert\(|!important|https?://' index.html
   ```
 - The syntax check assumes exactly one `<script>` block. Keep all JS in it, with no second inline script in `<head>`.
 - Browser checks with the Playwright MCP: it blocks `file://` URLs, so serve the folder for the test only (`python3 -m http.server 8765 --bind 127.0.0.1`) and stop the server afterwards. Check both themes (use the header toggle or `browser_emulate_media`) and 375px width. With the placeholder email, a FormSubmit 4xx error in the console is expected.
+
+## Claude Code hooks
+
+- `.claude/settings.json` registers `.claude/hooks/chatbot-voice.sh` as a `PostToolUse` hook on `mcp__playwright__browser_click`. When Claude clicks the chat widget during a browser check, the hook speaks "How can I help you" with macOS `say`. Hooks only see Claude's own tool calls; the in-page voice for real users comes from `speechSynthesis`.
+- `.claude/hooks/briefing-reminder.sh` is a `PostToolUse` hook on `mcp__playwright__browser_navigate`. When Claude opens the site, it waits 10 s in the background and shows a macOS `osascript` dialog about the IT security briefing. Real users get the same notice from the in-page `#briefing-modal` (an `alertdialog`, not `alert()`), shown once per load after `BRIEFING_DELAY_MS`.
 
 ## CI/CD and repos
 

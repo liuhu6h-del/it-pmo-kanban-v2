@@ -35,8 +35,8 @@ jobs:
             echo "::error::Forbidden API or !important found in index.html"
             exit 1
           fi
-          if grep -noE 'https?://[^"'"'"' )<>]+' index.html | grep -v 'https://formsubmit.co/'; then
-            echo "::error::External URL other than formsubmit.co found in index.html"
+          if grep -noE 'https?://[^"'"'"' )<>]+' index.html | grep -vE 'https://(formsubmit\.co/|wa\.me/)'; then
+            echo "::error::External URL other than formsubmit.co or wa.me found in index.html"
             exit 1
           fi
           echo "ok"
